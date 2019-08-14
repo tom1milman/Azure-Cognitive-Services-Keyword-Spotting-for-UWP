@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UwpKeywordSpotting.AppToAppCommunication;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 
@@ -56,17 +57,31 @@ namespace Listener
             return true;
         }
 
-        public async void SendRequest(string result)
+        public async void SendRequest(CommunicationEnums currentEnum, string result)
         {
             ValueSet request = new ValueSet();
-            request.Add("Request", result);
+            request.Add(currentEnum.ToString(), result);
 
             await Connection.SendMessageAsync(request);
         }
 
         private async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            Console.WriteLine("here");
+            ValueSet set = args.Request.Message;
+            Object temp = null;
+
+            CommunicationEnums currentEnum = CommunicationEnumsExtention.GetEnumFromValueSet(set.Keys);
+
+            switch (currentEnum)
+            {
+                case CommunicationEnums.TurnKwsOn:
+                    Program.cognitiveServicesUtils.ContinuousRecognitionWithKeywordSpottingAsync();
+                    break;
+                default:
+                    Console.WriteLine("Request Received not reccognized");
+                    break;
+            }
+
         }
 
         private void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)

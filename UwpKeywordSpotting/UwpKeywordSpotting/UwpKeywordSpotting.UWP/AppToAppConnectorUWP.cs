@@ -54,14 +54,13 @@ namespace UwpKeywordSpotting.UWP
         private async void MainPage_AppServiceConnected(object sender, AppServiceTriggerDetails e)
         {
             Connection.RequestReceived += AppServiceConnection_RequestReceived;
-            Debug.WriteLine("here");
+            Debug.WriteLine("Connected");
         }
 
         private async void MainPage_AppServiceDisconnected(object sender, EventArgs e)
         {
+            Debug.WriteLine("Disconnected");
             OpenListenerApp(false);
-            Debug.WriteLine("here2");
-
         }
 
         public async Task<string> SendRequest(string name, object obj)
@@ -75,11 +74,31 @@ namespace UwpKeywordSpotting.UWP
 
         private async void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
+            Object objReceived = null;
             ValueSet set = args.Request.Message;
 
-            string message = (string)set["Request"];
+            CommunicationEnums currentEnum = CommunicationEnumsExtention.GetEnumFromValueSet(set.Keys);
 
-            Debug.WriteLine(message);
+            if (currentEnum == CommunicationEnums.NULL)
+                return;
+
+            if (!set.TryGetValue(currentEnum.ToString(), out objReceived) && objReceived == null)
+                return;
+
+            switch (currentEnum)
+            {
+                case CommunicationEnums.Speech:
+                    string message = (string)objReceived;
+                    Debug.WriteLine(message);
+                    await UwpKeywordSpotting.MainPage.mainPage.SetSpeechResultText(message);
+                    await SendRequest(CommunicationEnums.TurnKwsOn.ToString(), bool.TrueString);
+                    await UwpKeywordSpotting.MainPage.mainPage.SetSpeechListeningViewVisibility(false);
+                    break;
+                case CommunicationEnums.GuiOn:
+                    Debug.WriteLine("GUI");
+                    await UwpKeywordSpotting.MainPage.mainPage.SetSpeechListeningViewVisibility(true);
+                    break;
+            }
         }
     }
 }

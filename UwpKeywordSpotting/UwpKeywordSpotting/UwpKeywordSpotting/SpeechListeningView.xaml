@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UwpKeywordSpotting.SpeechListeningView">
+    <ContentView.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand">
+            <BoxView BackgroundColor="#70B9B7" 
+                     Opacity="0.3" 
+                     AbsoluteLayout.LayoutBounds="0,0,1,1" 
+                     AbsoluteLayout.LayoutFlags="All" 
+                     VerticalOptions="FillAndExpand"/>
+            <Label AbsoluteLayout.LayoutBounds=".5,.4,1,1" 
+                   AbsoluteLayout.LayoutFlags="All" 
+                   Text="Listening, say something..." 
+                   TextColor="Black" 
+                   FontSize="20" 
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="CenterAndExpand"/>
+
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

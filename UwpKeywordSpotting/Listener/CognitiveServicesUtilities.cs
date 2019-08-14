@@ -5,14 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using UwpKeywordSpotting.AppToAppCommunication;
 using Windows.Storage;
 
 namespace Listener
 {
     public class CognitiveServicesUtilities
     {
-        private SpeechRecognizer KwsRecognizer;
+        private SpeechRecognizer KwsRecognizer, SpeechRecognizer;
         private string AzureKey, Region;
         private KeywordRecognitionModel KwsModel;
 
@@ -20,6 +22,7 @@ namespace Listener
         {
             SetKeys();
             SetReognitionModel();
+            SetSpeechRecognizer();
             SetKwsRecognizer();
         }
 
@@ -38,14 +41,20 @@ namespace Listener
             {
                 sFile = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(@"Listener\Resources\" + fileName);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Console.WriteLine($"{e.Message} \n{e.StackTrace}");
                 throw;
             }
 
             string path = sFile.Path;
             KwsModel = KeywordRecognitionModel.FromFile(path);
+        }
+
+        private void SetSpeechRecognizer()
+        {
+            var config = SpeechConfig.FromSubscription(AzureKey, Region);
+            SpeechRecognizer = new SpeechRecognizer(config);
         }
 
         private void SetKwsRecognizer()
@@ -61,6 +70,11 @@ namespace Listener
                 if (e.Result.Reason == ResultReason.RecognizingKeyword)
                 {
                     Console.WriteLine($"RECOGNIZING KEYWORD: Text={e.Result.Text}");
+                    Console.WriteLine(">>> Sending Request>>>");
+                    Thread speechRecognitionThread = new Thread(() => RecognizeSpeechAsync());
+                    speechRecognitionThread.Start();
+                    Program.connectionUtils.SendRequest(CommunicationEnums.GuiOn, bool.TrueString);
+                    Console.WriteLine("<<< Request sent <<<");
                 }
                 else if (e.Result.Reason == ResultReason.RecognizingSpeech)
                 {
@@ -77,9 +91,6 @@ namespace Listener
                 else if (e.Result.Reason == ResultReason.RecognizedSpeech)
                 {
                     Console.WriteLine($"RECOGNIZED: Text={e.Result.Text}");
-                    Console.WriteLine(">>> Sending Request>>>");
-                    Program.connectionUtils.SendRequest(e.Result.Text);
-                    Console.WriteLine("<<< Request sent <<<");
                 }
                 else if (e.Result.Reason == ResultReason.NoMatch)
                 {
@@ -140,6 +151,46 @@ namespace Listener
 
             // Stops recognition.
             await KwsRecognizer.StopKeywordRecognitionAsync().ConfigureAwait(false);
+
+        }
+
+        public async Task<String> RecognizeSpeechAsync()
+        {
+            Console.WriteLine("Say something...");
+
+            // Starts speech recognition, and returns after a single utterance is recognized. The end of a
+            // single utterance is determined by listening for silence at the end or until a maximum of 15
+            // seconds of audio is processed.  The task returns the recognition text as result. 
+            // Note: Since RecognizeOnceAsync() returns only a single utterance, it is suitable only for single
+            // shot recognition like command or query. 
+            // For long-running multi-utterance recognition, use StartContinuousRecognitionAsync() instead.
+            var result = await SpeechRecognizer.RecognizeOnceAsync();
+
+            // Checks result.
+            if (result.Reason == ResultReason.RecognizedSpeech)
+            {
+                Console.WriteLine($"---Recognized: {result.Text}");
+                Program.connectionUtils.SendRequest(CommunicationEnums.Speech, result.Text);
+                return result.Text;
+            }
+            else if (result.Reason == ResultReason.NoMatch)
+            {
+                Console.WriteLine($"NOMATCH: Speech could not be recognized.");
+            }
+            else if (result.Reason == ResultReason.Canceled)
+            {
+                var cancellation = CancellationDetails.FromResult(result);
+                Console.WriteLine($"CANCELED: Reason={cancellation.Reason}");
+
+                if (cancellation.Reason == CancellationReason.Error)
+                {
+                    Console.WriteLine($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                    Console.WriteLine($"CANCELED: ErrorDetails={cancellation.ErrorDetails}");
+                    Console.WriteLine($"CANCELED: Did you update the subscription info?");
+                }
+            }
+
+            return null;
 
         }
 

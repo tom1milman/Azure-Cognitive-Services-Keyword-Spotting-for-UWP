@@ -14,7 +14,9 @@ namespace Listener
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Starting: ");
             cognitiveServicesUtils = new CognitiveServicesUtilities();
+            //Console.WriteLine
             connectionUtils = new ConnectionUtilities();
 
             bool isConnected;

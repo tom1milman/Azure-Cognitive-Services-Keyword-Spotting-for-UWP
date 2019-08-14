@@ -1,14 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:UwpKeywordSpotting"
              xmlns:local="clr-namespace:UwpKeywordSpotting"
              x:Class="UwpKeywordSpotting.MainPage">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+    <AbsoluteLayout VerticalOptions="FillAndExpand">
+        <StackLayout
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Orientation="Vertical">
+
+            <Label Text="Keyword Spotting For UWP" 
+                   HorizontalOptions="Start"
+                   VerticalOptions="Start" />
+            <Label x:Name="SpeechResultText" Text="Waiting for request" 
+                   HorizontalOptions="Center"
+                   VerticalOptions="CenterAndExpand" 
+                   FontSize="20"/>
+        </StackLayout>
+        
+        <views:SpeechListeningView x:Name="ListeningView" AutomationId="VoiceView" 
+                                   AbsoluteLayout.LayoutBounds="0,0,1,1" 
+                                   AbsoluteLayout.LayoutFlags="All" 
+                                   IsVisible="False" />
+
+    </AbsoluteLayout>
 
 </ContentPage>
