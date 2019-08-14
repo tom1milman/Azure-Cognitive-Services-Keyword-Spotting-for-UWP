@@ -75,7 +75,16 @@ namespace Listener
             switch (currentEnum)
             {
                 case CommunicationEnums.TurnKwsOn:
+                    Program.cognitiveServicesUtils.isKwnOn = true;
                     Program.cognitiveServicesUtils.ContinuousRecognitionWithKeywordSpottingAsync();
+                    break;
+                case CommunicationEnums.TurnKwsOff:
+                    Program.cognitiveServicesUtils.isKwnOn = false;
+                    await Program.cognitiveServicesUtils.KwsRecognizer.StopContinuousRecognitionAsync();
+                    break;
+                case CommunicationEnums.Speech:
+                    await Program.cognitiveServicesUtils.KwsRecognizer.StopContinuousRecognitionAsync();
+                    await Program.cognitiveServicesUtils.RecognizeSpeechAsync();
                     break;
                 default:
                     Console.WriteLine("Request Received not reccognized");

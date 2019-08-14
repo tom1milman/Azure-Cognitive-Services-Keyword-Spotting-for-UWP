@@ -31,12 +31,6 @@ namespace Listener
                 throw;
             }
 
-            if (isConnected)
-            {
-                Thread speechRecognitionThread = new Thread(new ThreadStart(cognitiveServicesUtils.ContinuousRecognitionWithKeywordSpottingAsync));
-                speechRecognitionThread.Start();
-            }
-
             while (isConnected) { }
         }
     }

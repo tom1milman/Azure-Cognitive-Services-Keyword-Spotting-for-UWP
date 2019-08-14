@@ -41,6 +41,8 @@ namespace UwpKeywordSpotting.UWP
 
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
+
+            AppToAppConnectorManager.AppConnector = new AppToAppConnectorUWP();
         }
 
         /// <summary>
@@ -83,8 +85,6 @@ namespace UwpKeywordSpotting.UWP
             }
             // Ensure the current window is active
             Window.Current.Activate();
-
-            AppToAppConnectorManager.AppConnector = new AppToAppConnectorUWP();
         }
 
         /// <summary>

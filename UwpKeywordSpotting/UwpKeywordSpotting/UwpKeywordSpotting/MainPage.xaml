@@ -6,20 +6,55 @@
              x:Class="UwpKeywordSpotting.MainPage">
 
     <AbsoluteLayout VerticalOptions="FillAndExpand">
+        <!--Top Text-->
+        <Label Text="Keyword Spotting For UWP" 
+                   HorizontalOptions="Start"
+                   VerticalOptions="Start" />
+
+        <!--Speech Texts-->
         <StackLayout
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             Orientation="Vertical">
 
-            <Label Text="Keyword Spotting For UWP" 
-                   HorizontalOptions="Start"
-                   VerticalOptions="Start" />
-            <Label x:Name="SpeechResultText" Text="Waiting for request" 
+            <StackLayout HorizontalOptions="Center"
+                         VerticalOptions="CenterAndExpand">
+                <Label Text="Say 'Okay ASA' for Keyword spotting" 
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" 
+                       FontSize="20"
+                       />
+                <Label x:Name="SpeechResultText" Text="Waiting for request" 
                    HorizontalOptions="Center"
-                   VerticalOptions="CenterAndExpand" 
-                   FontSize="20"/>
+                   VerticalOptions="FillAndExpand" 
+                   FontSize="20"
+                   />
+            </StackLayout>
+
+            <!--Mic buttons-->
+            <StackLayout HorizontalOptions="Center"
+                         VerticalOptions="CenterAndExpand">
+
+            <Button Text="Listen to Mic" 
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="Center"
+                    WidthRequest="150"
+                    Clicked="ListenToMic_Clicked"/>
+
+            <Button x:Name="ToggleKwsButton"
+                    Text="Toggle KWS" 
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="Center"
+                    WidthRequest="150"
+                    TextColor="White"
+                    BackgroundColor="ForestGreen"
+                    Clicked="ToggleKws_Clicked"/>
+
+            </StackLayout>
+
         </StackLayout>
-        
+
+         <!--Listening View-->
         <views:SpeechListeningView x:Name="ListeningView" AutomationId="VoiceView" 
                                    AbsoluteLayout.LayoutBounds="0,0,1,1" 
                                    AbsoluteLayout.LayoutFlags="All" 

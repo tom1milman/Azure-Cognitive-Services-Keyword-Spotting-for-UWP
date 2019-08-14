@@ -14,7 +14,8 @@ namespace Listener
 {
     public class CognitiveServicesUtilities
     {
-        private SpeechRecognizer KwsRecognizer, SpeechRecognizer;
+        public SpeechRecognizer KwsRecognizer, SpeechRecognizer;
+        public bool isKwnOn;
         private string AzureKey, Region;
         private KeywordRecognitionModel KwsModel;
 

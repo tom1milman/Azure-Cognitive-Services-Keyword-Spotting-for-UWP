@@ -23,11 +23,7 @@ namespace UwpKeywordSpotting.UWP
             set { _connection = value; }
         }
 
-        public AppToAppConnectorUWP()
-        {
-            Thread thread = new Thread(() => OpenListenerApp(true));
-            thread.Start();
-        }
+        public AppToAppConnectorUWP() { }
 
         public async void OpenListenerApp(bool isFirst)
         {
@@ -55,6 +51,7 @@ namespace UwpKeywordSpotting.UWP
         {
             Connection.RequestReceived += AppServiceConnection_RequestReceived;
             Debug.WriteLine("Connected");
+            await UwpKeywordSpotting.MainPage.mainPage.ToggleKws(true);
         }
 
         private async void MainPage_AppServiceDisconnected(object sender, EventArgs e)
@@ -91,7 +88,8 @@ namespace UwpKeywordSpotting.UWP
                     string message = (string)objReceived;
                     Debug.WriteLine(message);
                     await UwpKeywordSpotting.MainPage.mainPage.SetSpeechResultText(message);
-                    await SendRequest(CommunicationEnums.TurnKwsOn.ToString(), bool.TrueString);
+                    if (UwpKeywordSpotting.MainPage.mainPage.isKwsOn)
+                        await SendRequest(CommunicationEnums.TurnKwsOn.ToString(), bool.TrueString);
                     await UwpKeywordSpotting.MainPage.mainPage.SetSpeechListeningViewVisibility(false);
                     break;
                 case CommunicationEnums.GuiOn:
