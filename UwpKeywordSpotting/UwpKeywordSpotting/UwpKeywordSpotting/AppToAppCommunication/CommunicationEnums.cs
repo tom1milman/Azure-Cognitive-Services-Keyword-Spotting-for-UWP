@@ -4,6 +4,9 @@ using System.Text;
 
 namespace UwpKeywordSpotting.AppToAppCommunication
 {
+    /// <summary>
+    /// Enums used for communication between the UWP and the Listener
+    /// </summary>
     public enum CommunicationEnums
     {
         Request,

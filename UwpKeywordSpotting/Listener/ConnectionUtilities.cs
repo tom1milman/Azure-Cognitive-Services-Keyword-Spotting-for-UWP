@@ -11,8 +11,18 @@ namespace Listener
 {
     public class ConnectionUtilities
     {
+        #region Properties
+
         AppServiceConnection Connection = null;
 
+        #endregion
+
+        #region methods
+
+        /// <summary>
+        /// Connects to the UWP application
+        /// </summary>
+        /// <returns>Returns true if connected successfully</returns>
         public async Task<bool> ConnectToUWP()
         {
             Connection = new AppServiceConnection();
@@ -57,6 +67,11 @@ namespace Listener
             return true;
         }
 
+        /// <summary>
+        /// Sends request to the UWP application with the given Enum and string
+        /// </summary>
+        /// <param name="currentEnum">Enum associated with the action that is performed</param>
+        /// <param name="result">string</param>
         public async void SendRequest(CommunicationEnums currentEnum, string result)
         {
             ValueSet request = new ValueSet();
@@ -65,6 +80,15 @@ namespace Listener
             await Connection.SendMessageAsync(request);
         }
 
+        #endregion
+
+        #region Handlers
+
+        /// <summary>
+        /// Handler for incoming requests
+        /// </summary>
+        /// <param name="sender">AppServiceConnection</param>
+        /// <param name="args">AppServiceRequestReceivedEventArgs</param>
         private async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             ValueSet set = args.Request.Message;
@@ -93,9 +117,16 @@ namespace Listener
 
         }
 
+        /// <summary>
+        /// Handler for when connection is closed/lost
+        /// </summary>
+        /// <param name="sender">AppServiceConnection</param>
+        /// <param name="args">AppServiceClosedEventArgs</param>
         private void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
         {
             Environment.Exit(0);
         }
+
+        #endregion
     }
 }

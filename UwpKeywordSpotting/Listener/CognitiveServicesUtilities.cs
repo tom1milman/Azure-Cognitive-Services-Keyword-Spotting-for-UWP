@@ -14,10 +14,16 @@ namespace Listener
 {
     public class CognitiveServicesUtilities
     {
+        #region Properties
+
         public SpeechRecognizer KwsRecognizer, SpeechRecognizer;
         public bool isKwnOn;
         private string AzureKey, Region;
         private KeywordRecognitionModel KwsModel;
+
+        #endregion
+
+        #region Constructor
 
         public CognitiveServicesUtilities()
         {
@@ -27,6 +33,13 @@ namespace Listener
             SetKwsRecognizer();
         }
 
+        #endregion
+
+        #region Setters
+
+        /// <summary>
+        /// Sets up the configuration keys for the Cognitive Services Library
+        /// </summary>
         private void SetKeys()
         {
             ResourceManager rm = CognitiveServicesKeys.ResourceManager;
@@ -34,6 +47,10 @@ namespace Listener
             Region = rm.GetString("Region");
         }
 
+        /// <summary>
+        /// Gets the kws.table file and sets the KeywordRecognitionModel 
+        /// </summary>
+        /// <returns>Task</returns>
         private async Task SetReognitionModel()
         {
             string fileName = "kws.table";
@@ -52,12 +69,18 @@ namespace Listener
             KwsModel = KeywordRecognitionModel.FromFile(path);
         }
 
+        /// <summary>
+        /// Initializes the SpeechRecognizer object
+        /// </summary>
         private void SetSpeechRecognizer()
         {
             var config = SpeechConfig.FromSubscription(AzureKey, Region);
             SpeechRecognizer = new SpeechRecognizer(config);
         }
 
+        /// <summary>
+        /// Initializes the KwsRecognizer objects and sets up all the handlers
+        /// </summary>
         private void SetKwsRecognizer()
         {
             var config = SpeechConfig.FromSubscription(AzureKey, Region);
@@ -125,6 +148,13 @@ namespace Listener
             };
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Starts the Keyword spotting 
+        /// </summary>
         public async void ContinuousRecognitionWithKeywordSpottingAsync()
         {
             // Creates an instance of a keyword recognition model. Update this to
@@ -155,6 +185,10 @@ namespace Listener
 
         }
 
+        /// <summary>
+        /// Starts listening for an input and translating it into text
+        /// </summary>
+        /// <returns>Recognized speech text</returns>
         public async Task<String> RecognizeSpeechAsync()
         {
             Console.WriteLine("Say something...");
@@ -195,5 +229,6 @@ namespace Listener
 
         }
 
+        #endregion
     }
 }
