@@ -79,7 +79,7 @@ namespace UwpKeywordSpotting
             else
                 requestEnum = CommunicationEnums.TurnKwsOff;
 
-            await AppToAppConnectorManager.AppConnector.SendRequest(requestEnum.ToString(), toggle);
+            await AppToAppConnectorManager.AppConnector.SendRequest(requestEnum, toggle);
 
             isKwsOn = !isKwsOn;
 
@@ -95,7 +95,7 @@ namespace UwpKeywordSpotting
 
         private async void ListenToMic_Clicked(object sender, EventArgs e)
         {
-            await AppToAppConnectorManager.AppConnector.SendRequest(CommunicationEnums.Speech.ToString(), true);
+            await AppToAppConnectorManager.AppConnector.SendRequest(CommunicationEnums.Speech, true);
             await SetSpeechListeningViewVisibility(true);
         }
 

@@ -8,6 +8,6 @@ namespace UwpKeywordSpotting.AppToAppCommunication
     {
         AppServiceConnection Connection { get; set; }
         void OpenListenerApp(bool isFirst);
-        Task<string> SendRequest(string name, Object obj);
+        Task<string> SendRequest(CommunicationEnums currentEnum, Object obj);
     }
 }
