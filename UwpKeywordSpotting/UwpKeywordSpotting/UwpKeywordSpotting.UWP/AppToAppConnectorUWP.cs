@@ -98,6 +98,7 @@ namespace UwpKeywordSpotting.UWP
         /// <param name="e"></param>
         private async void MainPage_AppServiceDisconnected(object sender, EventArgs e)
         {
+            await UwpKeywordSpotting.MainPage.mainPage.SetSpeechListeningViewVisibility(false);
             Debug.WriteLine("Disconnected");
             OpenListenerApp(false);
         }

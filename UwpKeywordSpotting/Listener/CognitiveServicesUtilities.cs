@@ -102,7 +102,7 @@ namespace Listener
                 }
                 else if (e.Result.Reason == ResultReason.RecognizingSpeech)
                 {
-                    Console.WriteLine($"RECOGNIZING: Text={e.Result.Text}");
+                    //Console.WriteLine($"RECOGNIZING: Text={e.Result.Text}");
                 }
             };
 
@@ -142,8 +142,8 @@ namespace Listener
 
             KwsRecognizer.SessionStopped += (s, e) =>
             {
-                Console.WriteLine("\n    Session stopped event.");
-                Console.WriteLine("\nStop recognition.");
+                //Console.WriteLine("\n    Session stopped event.");
+                //Console.WriteLine("\nStop recognition.");
                 stopRecognition.TrySetResult(0);
             };
         }

@@ -81,7 +81,7 @@ namespace UwpKeywordSpotting
 
             await AppToAppConnectorManager.AppConnector.SendRequest(requestEnum, toggle);
 
-            isKwsOn = !isKwsOn;
+            isKwsOn = toggle;
 
             if (toggle)
                 ToggleKwsButton.BackgroundColor = Color.ForestGreen;

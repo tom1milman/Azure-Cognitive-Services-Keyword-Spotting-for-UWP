@@ -101,10 +101,12 @@ namespace Listener
                 case CommunicationEnums.TurnKwsOn:
                     Program.cognitiveServicesUtils.isKwnOn = true;
                     Program.cognitiveServicesUtils.ContinuousRecognitionWithKeywordSpottingAsync();
+                    Console.WriteLine("KWS started");
                     break;
                 case CommunicationEnums.TurnKwsOff:
                     Program.cognitiveServicesUtils.isKwnOn = false;
                     await Program.cognitiveServicesUtils.KwsRecognizer.StopContinuousRecognitionAsync();
+                    Console.WriteLine("KWS stopped");
                     break;
                 case CommunicationEnums.Speech:
                     await Program.cognitiveServicesUtils.KwsRecognizer.StopContinuousRecognitionAsync();
